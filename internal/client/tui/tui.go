@@ -1,3 +1,4 @@
+// Package tui provides the terminal user interface for the application
 package tui
 
 import (
@@ -13,6 +14,7 @@ import (
 	"github.com/PrahaTurbo/goph-keeper/internal/client/config"
 )
 
+// Application holds all the components necessary for the terminal interface of the application.
 type Application struct {
 	appContext     context.Context
 	secretsClient  pb.SecretClient
@@ -34,6 +36,9 @@ type Application struct {
 	secrets        []*pb.SecretData
 }
 
+// NewApplication is a constructor function for Application.
+// It initializes Application with necessary tview and ProtoBuf clients. It also sets
+// up the pages and the menu in this function.
 func NewApplication(authClient pb.AuthClient, secretsClient pb.SecretClient) Application {
 	c := Application{
 		App:            tview.NewApplication(),

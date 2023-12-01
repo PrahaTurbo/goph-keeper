@@ -10,12 +10,14 @@ import (
 	"google.golang.org/grpc"
 )
 
+// Application holds the gRPC server, logger and the address of the server.
 type Application struct {
 	server  *grpc.Server
 	log     *zerolog.Logger
 	address string
 }
 
+// NewApplication is a constructor function for Application.
 func NewApplication(
 	server *grpc.Server,
 	log *zerolog.Logger,
@@ -28,6 +30,7 @@ func NewApplication(
 	}
 }
 
+// RunServer is a method that starts the server on the provided address.
 func (app Application) RunServer() {
 	listener, err := net.Listen("tcp", app.address)
 	if err != nil {

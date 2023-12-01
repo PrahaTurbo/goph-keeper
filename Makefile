@@ -13,7 +13,7 @@ fix/fieldalignment:
 
 ## tests: Run all test cases with race detector and coverage enabled.
 tests:
-	go clean -testcache && go test -race -cover -p 1 ./...
+	go clean -testcache && go test -race -cover ./...
 
 ## run/client: Run client with race detector enabled.
 run/client:

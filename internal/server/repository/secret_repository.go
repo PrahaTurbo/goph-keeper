@@ -1,3 +1,4 @@
+// Package repository provides an abstraction over users and secrets databases.
 package repository
 
 import (
@@ -9,8 +10,11 @@ import (
 	"github.com/PrahaTurbo/goph-keeper/internal/server/repository/pg"
 )
 
+// ErrNoRows is returned when no rows are found for a query.
 var ErrNoRows = errors.New("no rows were found")
 
+// SecretRepository is an interface that defines methods for
+// handling secret related operations in the database.
 type SecretRepository interface {
 	Create(ctx context.Context, secret *Secret) error
 	GetUserSecrets(ctx context.Context, userID int) ([]Secret, error)
@@ -22,6 +26,7 @@ type secretRepo struct {
 	pg *pgxpool.Pool
 }
 
+// NewSecretRepository creates and returns an instance of SecretRepository.
 func NewSecretRepository(pg *pgxpool.Pool) SecretRepository {
 	r := &secretRepo{
 		pg: pg,
@@ -30,6 +35,8 @@ func NewSecretRepository(pg *pgxpool.Pool) SecretRepository {
 	return r
 }
 
+// Create implements the Create method of the SecretRepository interface.
+// It stores a new secret in the PostgreSQL database.
 func (s *secretRepo) Create(ctx context.Context, secret *Secret) error {
 	timeoutCtx, cancel := context.WithTimeout(ctx, pg.DefaultQueryTimeout)
 	defer cancel()
@@ -55,6 +62,8 @@ VALUES ($1, $2, $3, $4)
 	return nil
 }
 
+// GetUserSecrets implements the GetUserSecrets method of the SecretRepository interface.
+// It retrieves all secrets related to a specific user from the PostgreSQL database.
 func (s *secretRepo) GetUserSecrets(ctx context.Context, userID int) ([]Secret, error) {
 	timeoutCtx, cancel := context.WithTimeout(ctx, pg.DefaultQueryTimeout)
 	defer cancel()
@@ -103,6 +112,8 @@ ORDER BY created_at
 	return secrets, nil
 }
 
+// UpdateSecret implements the UpdateSecret method of the SecretRepository interface.
+// It updates an existing secret in the PostgreSQL database.
 func (s *secretRepo) UpdateSecret(ctx context.Context, secret *Secret) error {
 	timeoutCtx, cancel := context.WithTimeout(ctx, pg.DefaultQueryTimeout)
 	defer cancel()
@@ -130,6 +141,8 @@ WHERE id = $4 AND user_id = $5
 	return nil
 }
 
+// DeleteSecret implements the DeleteSecret method of the SecretRepository interface.
+// It removes a specific secret associated with a User ID from the PostgreSQL database.
 func (s *secretRepo) DeleteSecret(ctx context.Context, secretID, userID int) error {
 	timeoutCtx, cancel := context.WithTimeout(ctx, pg.DefaultQueryTimeout)
 	defer cancel()

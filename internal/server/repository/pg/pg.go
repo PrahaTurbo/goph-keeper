@@ -1,3 +1,4 @@
+// Package pg provides functions for creating and managing PostgreSQL connections.
 package pg
 
 import (
@@ -11,8 +12,10 @@ import (
 	"github.com/PrahaTurbo/goph-keeper/internal/server/config"
 )
 
+// DefaultQueryTimeout specifies a predefined period of time to wait for a query to complete before cancelling it.
 const DefaultQueryTimeout = time.Second * 5
 
+// NewPGPool creates a new PostgreSQL connection pool using the given configuration.
 func NewPGPool(cfg config.PG) (*pgxpool.Pool, error) {
 	poolConfig, err := newPGPoolConfig(cfg)
 	if err != nil {

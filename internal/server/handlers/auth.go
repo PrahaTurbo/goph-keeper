@@ -1,3 +1,4 @@
+// Package handlers provides the gRPC implementations for the Auth and Secret service.
 package handlers
 
 import (
@@ -13,6 +14,7 @@ import (
 	"github.com/PrahaTurbo/goph-keeper/internal/server/services"
 )
 
+// AuthHandler implements the auth-related gRPC service.
 type AuthHandler struct {
 	pb.UnimplementedAuthServer
 
@@ -20,6 +22,7 @@ type AuthHandler struct {
 	log     *zerolog.Logger
 }
 
+// NewAuthHandler is the constructor for AuthHandler.
 func NewAuthHandler(service services.AuthService, log *zerolog.Logger) *AuthHandler {
 	return &AuthHandler{
 		service: service,
@@ -27,6 +30,8 @@ func NewAuthHandler(service services.AuthService, log *zerolog.Logger) *AuthHand
 	}
 }
 
+// Register is a gRPC method that allows users to register to the system.
+// It returns the user's token or error.
 func (h *AuthHandler) Register(ctx context.Context, in *pb.AuthRequest) (*pb.AuthResponse, error) {
 	token, err := h.service.Register(ctx, in.Login, in.Password)
 	if err != nil {
@@ -42,6 +47,8 @@ func (h *AuthHandler) Register(ctx context.Context, in *pb.AuthRequest) (*pb.Aut
 	return &resp, nil
 }
 
+// Login is a gRPC method that allows users to authenticate themselves.
+// It returns the user's token or error.
 func (h *AuthHandler) Login(ctx context.Context, in *pb.AuthRequest) (*pb.AuthResponse, error) {
 	token, err := h.service.Login(ctx, in.Login, in.Password)
 	if err != nil {

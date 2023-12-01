@@ -10,6 +10,7 @@ import (
 	"github.com/PrahaTurbo/goph-keeper/internal/server/repository"
 )
 
+// SecretService is an interface that defines methods for handling secret related operations.
 type SecretService interface {
 	CreateSecret(ctx context.Context, req *models.Secret) error
 	GetUserSecrets(ctx context.Context) ([]models.Secret, error)
@@ -23,6 +24,7 @@ type secretService struct {
 	crypt encryption.Encryption
 }
 
+// NewSecretService creates and returns a new SecretService instance.
 func NewSecretService(
 	repo repository.SecretRepository,
 	log *zerolog.Logger,
@@ -35,6 +37,7 @@ func NewSecretService(
 	}
 }
 
+// CreateSecret creates a new secret for the user.
 func (s *secretService) CreateSecret(ctx context.Context, secretModel *models.Secret) error {
 	userID, err := extractUserIDFromCtx(ctx)
 	if err != nil {
@@ -75,6 +78,7 @@ func (s *secretService) CreateSecret(ctx context.Context, secretModel *models.Se
 	return nil
 }
 
+// GetUserSecrets retrieves all secrets associated with the user.
 func (s *secretService) GetUserSecrets(ctx context.Context) ([]models.Secret, error) {
 	userID, err := extractUserIDFromCtx(ctx)
 	if err != nil {
@@ -127,6 +131,7 @@ func (s *secretService) GetUserSecrets(ctx context.Context) ([]models.Secret, er
 	return modelSecrets, nil
 }
 
+// UpdateSecret updates the provided secret.
 func (s *secretService) UpdateSecret(ctx context.Context, secretModel *models.Secret) error {
 	userID, err := extractUserIDFromCtx(ctx)
 	if err != nil {
@@ -166,6 +171,7 @@ func (s *secretService) UpdateSecret(ctx context.Context, secretModel *models.Se
 	return nil
 }
 
+// DeleteSecret removes the secret with provided ID.
 func (s *secretService) DeleteSecret(ctx context.Context, secretID int) error {
 	userID, err := extractUserIDFromCtx(ctx)
 	if err != nil {

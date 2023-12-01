@@ -1,3 +1,4 @@
+// Package config provides the configurations for both the server and PostgreSQL database.
 package config
 
 import (
@@ -10,6 +11,8 @@ import (
 
 const path = "./server.config.yml"
 
+// LoadConfig loads the server and database configurations from a YAML file
+// and environment variables into Config struct.
 func LoadConfig() *Config {
 	data, err := os.ReadFile(path)
 	if err != nil {
@@ -28,11 +31,14 @@ func LoadConfig() *Config {
 	return &cfg
 }
 
+// Config is a representation of the configuration in the YAML file.
+// It holds configurations for the server and PostgreSQL database.
 type Config struct {
 	Server Server `yaml:"goph-keeper"`
 	PG     PG     `yaml:"postgre"`
 }
 
+// Server holds the server configurations.
 type Server struct {
 	Host     string `yaml:"host"`
 	CertPath string `yaml:"cert_path"`
@@ -41,6 +47,7 @@ type Server struct {
 	Port     int    `yaml:"port"`
 }
 
+// PG holds the PostgreSQL database configurations.
 type PG struct {
 	Host     string `yaml:"host"`
 	User     string `yaml:"user"`

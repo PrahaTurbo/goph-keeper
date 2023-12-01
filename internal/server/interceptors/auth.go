@@ -1,3 +1,4 @@
+// Package interceptors provides the gRPC interceptors for the application.
 package interceptors
 
 import (
@@ -27,16 +28,23 @@ var unprotectedPaths = map[string]bool{
 	pb.Auth_Register_FullMethodName: true,
 }
 
+// AuthInterceptor structure holds the JWT Manager which will be used to parse the token
+// from the context metadata for authenticated services.
 type AuthInterceptor struct {
 	JWTManager *jwt.JWTManager
 }
 
+// NewAuthInterceptor is a constructor function that initializes AuthInterceptor.
 func NewAuthInterceptor(jwtManager *jwt.JWTManager) AuthInterceptor {
 	return AuthInterceptor{
 		JWTManager: jwtManager,
 	}
 }
 
+// UnaryServerInterceptor is a gRPC unary server interceptor function.
+// It intercepts each request and if it is not an unprotected path, it checks for Bearer token and uses JWTManager
+// To parse and validate the token. The parsed UserID from the token is then added to context.
+// It then calls the underlying gRPC handler and returns its response and error.
 func (a *AuthInterceptor) UnaryServerInterceptor(
 	ctx context.Context,
 	req interface{},

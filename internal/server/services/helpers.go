@@ -7,6 +7,7 @@ import (
 	"github.com/PrahaTurbo/goph-keeper/internal/server/interceptors"
 )
 
+// ErrExtractFromContext is returned when attempting to extract the user ID from context fails.
 var ErrExtractFromContext = errors.New("cannot extract user id from context")
 
 func extractUserIDFromCtx(ctx context.Context) (int, error) {

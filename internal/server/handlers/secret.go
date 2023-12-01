@@ -14,6 +14,7 @@ import (
 	"github.com/PrahaTurbo/goph-keeper/internal/server/services"
 )
 
+// SecretHandler implements the secret-related gRPC service.
 type SecretHandler struct {
 	pb.UnimplementedSecretServer
 
@@ -21,6 +22,7 @@ type SecretHandler struct {
 	log     *zerolog.Logger
 }
 
+// NewSecretHandler is the constructor for the SecretHandler.
 func NewSecretHandler(service services.SecretService, log *zerolog.Logger) *SecretHandler {
 	return &SecretHandler{
 		service: service,
@@ -28,6 +30,7 @@ func NewSecretHandler(service services.SecretService, log *zerolog.Logger) *Secr
 	}
 }
 
+// Create is a gRPC method that allows users to create secrets.
 func (h *SecretHandler) Create(ctx context.Context, in *pb.CreateRequest) (*emptypb.Empty, error) {
 	secret := models.Secret{
 		Type:     in.Type.String(),
@@ -42,6 +45,7 @@ func (h *SecretHandler) Create(ctx context.Context, in *pb.CreateRequest) (*empt
 	return &emptypb.Empty{}, nil
 }
 
+// GetSecrets is a gRPC method that fetches the secrets of a user.
 func (h *SecretHandler) GetSecrets(ctx context.Context, in *pb.GetSecretsRequest) (*pb.GetSecretsResponse, error) {
 	secrets, err := h.service.GetUserSecrets(ctx)
 	if err != nil {
@@ -71,6 +75,7 @@ func (h *SecretHandler) GetSecrets(ctx context.Context, in *pb.GetSecretsRequest
 	return &response, nil
 }
 
+// Update is a gRPC method that allows users to update secrets.
 func (h *SecretHandler) Update(ctx context.Context, in *pb.UpdateRequest) (*emptypb.Empty, error) {
 	secret := &models.Secret{
 		ID:       int(in.SecretId),
@@ -86,6 +91,7 @@ func (h *SecretHandler) Update(ctx context.Context, in *pb.UpdateRequest) (*empt
 	return &emptypb.Empty{}, nil
 }
 
+// Delete is a gRPC method that allows users to delete secrets.
 func (h *SecretHandler) Delete(ctx context.Context, in *pb.DeleteRequest) (*emptypb.Empty, error) {
 	if err := h.service.DeleteSecret(ctx, int(in.SecretId)); err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to delete secret")

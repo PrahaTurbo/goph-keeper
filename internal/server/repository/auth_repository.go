@@ -1,3 +1,4 @@
+// Package repository provides an abstraction over users and secrets databases.
 package repository
 
 import (
@@ -13,8 +14,11 @@ import (
 
 const uniqueViolationErrCode = "23505"
 
+// ErrAlreadyExist is returned when a user already exists in the database.
 var ErrAlreadyExist = errors.New("login already exist in database")
 
+// AuthRepository is an interface that defines method to
+// interact with underlying User related database operations.
 type AuthRepository interface {
 	SaveUser(ctx context.Context, user models.User) (int, error)
 	GetUser(ctx context.Context, login string) (*models.User, error)
@@ -24,6 +28,7 @@ type authRepo struct {
 	pg *pgxpool.Pool
 }
 
+// NewAuthRepository creates and returns an instance of AuthRepository.
 func NewAuthRepository(pg *pgxpool.Pool) AuthRepository {
 	r := &authRepo{
 		pg: pg,
@@ -32,6 +37,8 @@ func NewAuthRepository(pg *pgxpool.Pool) AuthRepository {
 	return r
 }
 
+// SaveUser implements the SaveUser method of the AuthRepository interface.
+// It saves a User record in a PostgreSQL database and handles unique constraint violations.
 func (a *authRepo) SaveUser(ctx context.Context, user models.User) (int, error) {
 	timeoutCtx, cancel := context.WithTimeout(ctx, pg.DefaultQueryTimeout)
 	defer cancel()
@@ -60,6 +67,8 @@ RETURNING id
 	return userID, nil
 }
 
+// GetUser implements the GetUser method of the AuthRepository interface.
+// It retrieves a User record by login from a PostgreSQL database.
 func (a *authRepo) GetUser(ctx context.Context, login string) (*models.User, error) {
 	timeoutCtx, cancel := context.WithTimeout(ctx, pg.DefaultQueryTimeout)
 	defer cancel()
