@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package gophkeeper;
+
+option go_package = "github.com/PrahaTurbo/goph-keeper/proto";
+
+message AuthRequest {
+  string login = 1;
+  string password = 2;
+}
+
+message AuthResponse {
+  string token = 1;
+}
+
+service Auth {
+  rpc Register(AuthRequest) returns (AuthResponse);
+  rpc Login(AuthRequest) returns (AuthResponse);
+}
+

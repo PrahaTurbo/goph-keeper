@@ -1,0 +1,12 @@
+goph-keeper:
+  host: "127.0.0.1"
+  port: 8090
+  cert_path: "cert/example.cert"
+  key_path: "cert/example.key"
+
+postgre:
+  host: "127.0.0.1"
+  port: 5432
+  user: "gkeeper"
+  password: "secret"
+  database: "goph-keeper"
